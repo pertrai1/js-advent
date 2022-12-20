@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>19 - Form Validation || Advent of JavaScript</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+
+  <form action="">
+    <h1>Signup</h1>
+    <div class="field">
+      <input type="text" name="name" id="name" placeholder=" " />
+      <label for="name">Name</label>
+      <div class="error">
+
+      </div>
+      <div class="success"></div>
+    </div>
+    <div class="field">
+      <input type="email" name="email" id="email" placeholder=" " />
+      <label for="email">Email</label>
+      <div class="error"></div>
+      <div class="success">
+      </div>
+    </div>
+    <div class="field">
+      <input type="password" name="password" id="password" placeholder=" " />
+      <label for="password">Password</label>
+      <button class="show-hide"></button>
+      <div class="error"></div>
+      <div class="success"></div>
+    </div>
+    <div class="field show">
+      <input type="text" name="confirm-password" id="confirm-password" placeholder=" " />
+      <label for="confirm-password">Confirm Password</label>
+      <button class="show-hide"></button>
+      <div class="error"></div>
+      <div class="success"></div>
+    </div>
+    <div class="field">
+      <input type="submit" name="submit" value="Submit" />
+    </div>
+  </form>
+  <script>
+    const fields = document.querySelectorAll('.field');
+    const passwordInput = document.querySelector('input[name="password"]');
+    const passwordBtn = document.querySelector('input[name="password"] ~ .show-hide');
+    const passwordConfirmInput = document.querySelector('input[name="confirm-password"]');
+    const passwordConfirmBtn = document.querySelector('input[name="confirm-password"] ~ .show-hide');
+    passwordBtn.addEventListener('click', e => {
+      e.preventDefault();
+      const current = passwordInput.type;
+      if (current === 'text') {
+        passwordInput.type = 'password';
+      } else {
+        passwordInput.type = 'text';
+      }
+      fields[2].classList.toggle('show');
+    });
+    passwordConfirmBtn.addEventListener('click', e => {
+      e.preventDefault();
+      const current = passwordConfirmInput.type;
+      if (current === 'text') {
+        passwordConfirmInput.type = 'password';
+      } else {
+        passwordConfirmInput.type = 'text';
+      }
+      fields[3].classList.toggle('show');
+    });
+    const isValidEmail = (email) => {
+      return String(email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
+    const nameMap = {
+      name: {
+        validator: (value) => !!value,
+        err: 'A name is required'
+      },
+      email: {
+        validator: isValidEmail,
+        err: 'A valid email is required'
+      },
+      password: {
+        validator: (value) => !!value,
+        err: 'A password is required'
+      },
+      'confirm-password': {
+        validator: (confirm) => confirm === passwordInput.value,
+        err: 'passwords must match'
+      }
+    }
+    fields.forEach(field => {
+      const children = field.childNodes;
+      const input = children[1];
+      input.addEventListener('blur', e => {
+        const {name, value} = e.target;
+        const errorEl = field.querySelector('div.error');
+        const successEl = field.querySelector('div.success');
+        const nameMapping = nameMap[name];
+        if (nameMapping.validator(value)) {
+          successEl.innerHTML = '<img src="./images/success.svg" alt="Success" />';
+          errorEl.innerHTML = '';
+        } else {
+          errorEl.innerHTML = `<img src="./images/error.svg" alt="Error" />${nameMapping.err}`;
+          successEl.innerHTML = '';
+        }
+      })
+    })
+  </script>
+  <script src="app.js"></script>
+</body>
+
+</html>
