@@ -49,3 +49,41 @@ const episodes = [
     link: 'https://www.compressed.fm/episode/33'
   },
 ]
+
+const UI = {
+  tabs: document.querySelector('#tabs'),
+  cover: document.querySelector('.cover'),
+  heading: document.querySelector('.content > h1'),
+  paragraph: document.querySelector('.content > p'),
+  moreLink: document.querySelector('.more'),
+}
+
+const renderListItems = () => {
+  UI.tabs.innerHTML = episodes.map((episode, i) => {
+    return `<li onclick="renderEpisode(${i})">
+      <a href="#">
+        <div class="episode">Episode ${episode.id}</div>
+        <div class="title">${episode.title}</div>
+      </a>
+    </li>`;
+  }).join('');
+}
+
+const toggleListItemCSS = (episode) => {
+  const listItems = Array.from(document.querySelectorAll('li'));
+  listItems.forEach(item => item.classList.remove('selected'));
+  listItems[episode].classList.add('selected');
+}
+
+const renderEpisode = (episode) => {
+  toggleListItemCSS(episode) 
+
+  UI.cover.innerHTML = `<img src="./images/${episodes[episode].cover}" alt="Episode ${episodes[episode].id}" />`;
+  UI.heading.innerHTML = episodes[episode].title;
+  UI.paragraph.innerHTML = episodes[episode].description;
+  UI.moreLink.href = episodes[episode].link;
+}
+
+renderListItems();
+renderEpisode(0);
+
