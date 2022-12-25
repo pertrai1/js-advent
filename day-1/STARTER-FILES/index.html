@@ -21,11 +21,11 @@
     <div class="timer">
       <div class="time">
         <div class="minutes">
-          <input type="text" value="15" disabled />
+          <input type="text" value="0" disabled />
         </div>
         <div class="colon">:</div>
         <div class="seconds">
-          <input type="text" value="00" disabled />
+          <input type="text" value="10" disabled />
         </div>
       </div>
       <button class="start">start</button>
@@ -35,6 +35,58 @@
     </div>
   </div>
 
+  <script>
+    const startBtn = document.querySelector('.start');
+    const settingsBtn = document.querySelector('.settings');
+    const ring = document.querySelector('.ring');
+
+    const minutes = document.querySelector('.minutes input');
+    const seconds = document.querySelector('.seconds input');
+
+    let currentHours = minutes.value;
+    let clockInterval;
+
+    if (Number(minutes.value) < 10) {
+      minutes.value = minutes.value.padStart(2, 0);
+    }
+    if (Number(seconds.value) < 10) {
+      seconds.value = seconds.value.padStart(2, 0);
+    }
+    settingsBtn.addEventListener('click', () => {
+      minutes.removeAttribute('disabled');
+      seconds.removeAttribute('disabled');
+    })
+
+    startBtn.addEventListener('click', ({target}) => {
+      if (Number(minutes.value) < 10) {
+        minutes.value.padStart(2, 0);
+      }
+      if (target.innerText === 'START') {
+        target.innerText = 'PAUSE';
+        clockInterval = setInterval(() => {
+          if (Number(minutes.value) === 0 && Number(seconds.value) === 0) {
+            ring.classList.add('ending');
+            clearInterval(clockInterval);
+            return;
+          }
+          seconds.value--;
+          let secondsNum = Number(seconds.value);
+          if (secondsNum < 10) {
+            seconds.value = seconds.value.padStart(2, 0)
+          }
+          if (secondsNum < 0) {
+            seconds.value = 60;
+            minutes.value--;
+          }
+        }, 1000)
+      } else {
+        target.innerText = 'START';
+        clearInterval(clockInterval)
+      }
+      minutes.setAttribute('disabled', '');
+      seconds.setAttribute('disabled', '');
+    })
+  </script>
 </body>
 
 </html>
