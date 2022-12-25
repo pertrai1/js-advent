@@ -67,6 +67,7 @@
           if (Number(minutes.value) === 0 && Number(seconds.value) === 0) {
             ring.classList.add('ending');
             clearInterval(clockInterval);
+            window.alert('Time is up');
             return;
           }
           seconds.value--;
